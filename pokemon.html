@@ -27,8 +27,8 @@
         <div class="row justify-content-center">
             <div class="col">
                 <h1 class="mt-2 text-center">Imagenes de Pokemones</h1>
-                <img class="pokimg" src="http://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png"
-                    alt="pokemon" width="100">
+                <!-- <img class="pokimg" src="http://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png" -->
+                    <!-- alt="pokemon" width="100"> -->
 
             </div>
         </div>
@@ -56,14 +56,16 @@
 
         let dir1 = '<img src="http://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/'
         let dir2 = '.png">'
-        // toastr.info("PRUEBA");
 
+        function ramd(hasta) {
+            return Math.floor(Math.random()*hasta) ;
+        }
 
         $("button").click(function () {
             for (let i = 150; i > 0; i--) {
-                $(".pokimg").after(dir1 + i + dir2);
+                $("h1").after(dir1 + ramd(150) + dir2);
             }
-
+            toastr.warning("Genial, los atrapastes");
         });
 
 
