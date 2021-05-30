@@ -11,7 +11,9 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <style>
-        /* mis estilos */
+        .informacion {
+            display: none;
+        }
     </style>
 
 </head>
@@ -19,16 +21,38 @@
 <body>
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-2">
-                <button class="btn-success mt-5 d-inline-block align-self-center mx-auto">Atrapalos</button>
+            <div class="col mt-5">
+                <div class="justify-content-center">
+
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Pok%C3%A9ball.png/240px-Pok%C3%A9ball.png"
+                        class="mx-auto d-block img-fluid" style="width:10%" alt="logo">
+                </div>
+                <label for="numero">Cuantos quieres???</label>
+                <input type="text" class="form-control ps-1 my-0 d-inline-block" id="numero"
+                    placeholder="Obten un numero de pokemones aleatorios" name="num">
+                <button class="btn-success mt-3 d-inline-block align-self-center mx-auto">Atrapalos</button>
             </div>
         </div>
+        <hr>
 
         <div class="row justify-content-center">
-            <div class="col">
-                <h1 class="mt-2 text-center">Imagenes de Pokemones</h1>
-                <!-- <img class="pokimg" src="http://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png" -->
-                    <!-- alt="pokemon" width="100"> -->
+            <div class="col p-2 mt-2 border border-danger border-5 rounded ms-2 ">
+                
+                <h1 class="text-center ">Imagenes de Pokemones</h1>
+                <div class="pokimg ">
+
+                </div>
+
+            </div>
+            <div class="col p-2 mt-2 informacion border border-warning border-5 rounded me-2">
+                <h1 class="nombre mt-2 ">Nombre: <spam></spam>
+                </h1>
+                <h4 class="tipos mt-2 ">Tipos: <spam></spam>
+                </h4>
+                <h4 class="altura mt-2 ">Altura: <spam></spam>
+                </h4>
+                <h4 class="peso mt-2 ">Peso: <spam></spam>
+                </h4>
 
             </div>
         </div>
@@ -54,19 +78,75 @@
             "progressBar": true,
         }
 
-        let dir1 = '<img src="http://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/'
+        let dir1 = '<img id="1" src="http://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/'
         let dir2 = '.png">'
 
+        let urlapi = 'http://pokeapi.co/api/v2/pokemon/'
+
         function ramd(hasta) {
-            return Math.floor(Math.random()*hasta) ;
+            return Math.floor(Math.random() * (1 - hasta) + hasta);
         }
 
-        $("button").click(function () {
-            for (let i = 150; i > 0; i--) {
-                $("h1").after(dir1 + ramd(150) + dir2);
+
+        $("button").on("click", function () {
+
+            //Cada vez que hacemos una consulta borramos el html del resultado anterior.
+            $(".pokimg").empty();
+            $('.informacion spam').empty()
+
+            var pokemones = $("#numero").val();
+
+            for (let i = pokemones; i > 0; i--) {
+                // $("h1").after(dir1 + ramd(898) + dir2);
+                let numero = ramd(898);
+                $(".pokimg").append(`<img id="${numero}" data-bs-toggle="popover" title="Popover title" data-bs-content="And here's some amazing content" src="http://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${numero}.png">`);
+                // $("h1").after(`<img id="${i}" src="http://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/${i}.png">`);
+
+
             }
-            toastr.warning("Genial, los atrapastes");
+            toastr.info("Genial, atrapastes los " + pokemones + " pokemones");
         });
+
+        //al hacer click nos da la info del pokemon
+
+        $(document).on("click", "img", function () {
+
+            $.get(urlapi + $(this).attr("id"), function (resp) {
+                var tip = "";
+                //   var x ="";
+                //     for (let i = 0; i < resp.types.length;i++){
+                //       console.log(resp.types[i].type.name)
+                //       var x = x + " " + resp.types[i].type.name
+
+                //   }
+
+                for (var tipos of resp.types) {
+                    console.log(tipos.type.name);
+
+                    tip += tipos.type.name + " ";
+
+                }
+                document.body.scrollTop = 0; // For Safari
+                document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+                
+                $('.informacion').show()
+
+               
+                // Capturamos la respuesta, recorremos el objeto y asignamos valores al html.
+                console.log(resp);
+                console.log(resp.name);
+                // console.log(resp.types[0].type.name +"" + ""+  resp.types[1].type.name);
+                console.log(resp.height);
+                console.log(resp.weight);
+                $('.nombre spam').text(resp.name)
+                $('.tipos spam').text(tip)
+                $('.altura spam').text(resp.height)
+                $('.peso spam').text(resp.weight)
+
+            }, "json");
+
+        });
+
 
 
 
